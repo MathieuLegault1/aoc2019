@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Day3Part1 do
   use Mix.Task
 
-  alias AdventOfCode.Day1.Part1
+  alias AdventOfCode.Day3.Part1
 
   def run(_args) do
     "inputs/day3_part1.txt"
