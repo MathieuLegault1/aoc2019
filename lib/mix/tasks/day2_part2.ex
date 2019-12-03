@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Day2Part2 do
     |> case do
       {:ok, input} ->
         input
-        |> Part2.run()
+        |> Part2.run(19_690_720)
         |> IO.puts()
 
       {:error, _error} ->

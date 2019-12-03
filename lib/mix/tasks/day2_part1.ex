@@ -10,7 +10,7 @@ defmodule Mix.Tasks.Day2Part1 do
       {:ok, input} ->
         input
         |> Part1.run()
-        |> IO.inspect(limit: :infinity)
+        |> IO.puts()
 
       {:error, _error} ->
         IO.puts("The provided file path doesn't exist")
