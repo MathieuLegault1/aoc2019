@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Day4art2 do
+defmodule Mix.Tasks.Day4Part2 do
   use Mix.Task
 
   alias AdventOfCode.Day4.Part2
