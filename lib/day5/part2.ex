@@ -19,79 +19,79 @@ defmodule AdventOfCode.Day5.Part2 do
     parse_opcodes(intcode_program, 0)
   end
 
-  defp parse_opcodes(intcode_program, instruction_pointer_index) do
+  defp parse_opcodes(intcode_program, instruction_pointer) do
     {opcode_number, number_of_parameters} =
       intcode_program
-      |> Enum.at(instruction_pointer_index)
+      |> Enum.at(instruction_pointer)
       |> current_opcode()
 
     intcode_program
-    |> Enum.slice(instruction_pointer_index, number_of_parameters)
-    |> parse_opcode_and_update_program(intcode_program, opcode_number, instruction_pointer_index)
+    |> Enum.slice(instruction_pointer, number_of_parameters)
+    |> parse_opcode_and_update_program(intcode_program, opcode_number, instruction_pointer)
     |> case do
-      {:cont, {updated_intcode_program, instruction_pointer_index}} ->
-        parse_opcodes(updated_intcode_program, instruction_pointer_index)
+      {:cont, {updated_intcode_program, instruction_pointer}} ->
+        parse_opcodes(updated_intcode_program, instruction_pointer)
 
       {:halt, updated_intcode_program} ->
         updated_intcode_program
     end
   end
 
-  defp parse_opcode_and_update_program([current_opcode, value_1, value_2, override_index], intcode_program, @addition_opcode, instruction_pointer_index) do
+  defp parse_opcode_and_update_program([current_opcode, value_1, value_2, override_index], intcode_program, @addition_opcode, instruction_pointer) do
     value_1 = value_by_parameter_mode(current_opcode, intcode_program, value_1, 2)
     value_2 = value_by_parameter_mode(current_opcode, intcode_program, value_2, 3)
 
     intcode_program = List.replace_at(intcode_program, override_index, value_1 + value_2)
 
-    {:cont, {intcode_program, instruction_pointer_index + 4}}
+    {:cont, {intcode_program, instruction_pointer + 4}}
   end
 
-  defp parse_opcode_and_update_program([current_opcode, value_1, value_2, override_index], intcode_program, @multiplication_opcode, instruction_pointer_index) do
+  defp parse_opcode_and_update_program([current_opcode, value_1, value_2, override_index], intcode_program, @multiplication_opcode, instruction_pointer) do
     value_1 = value_by_parameter_mode(current_opcode, intcode_program, value_1, 2)
     value_2 = value_by_parameter_mode(current_opcode, intcode_program, value_2, 3)
 
     intcode_program = List.replace_at(intcode_program, override_index, value_1 * value_2)
 
-    {:cont, {intcode_program, instruction_pointer_index + 4}}
+    {:cont, {intcode_program, instruction_pointer + 4}}
   end
 
-  defp parse_opcode_and_update_program([_current_opcode, override_index], intcode_program, @input_opcode, instruction_pointer_index) do
+  defp parse_opcode_and_update_program([_current_opcode, override_index], intcode_program, @input_opcode, instruction_pointer) do
     intcode_program = List.replace_at(intcode_program, override_index, 5)
 
-    {:cont, {intcode_program, instruction_pointer_index + 2}}
+    {:cont, {intcode_program, instruction_pointer + 2}}
   end
 
-  defp parse_opcode_and_update_program([current_opcode, value_1], intcode_program, @output_opcode, instruction_pointer_index) do
+  defp parse_opcode_and_update_program([current_opcode, value_1], intcode_program, @output_opcode, instruction_pointer) do
     value_1 = value_by_parameter_mode(current_opcode, intcode_program, value_1, 2)
 
     IO.puts(value_1)
 
-    {:cont, {intcode_program, instruction_pointer_index + 2}}
+    {:cont, {intcode_program, instruction_pointer + 2}}
   end
 
-  defp parse_opcode_and_update_program([current_opcode, value_1, value_2], intcode_program, @jump_if_true_opcode, instruction_pointer_index) do
+  defp parse_opcode_and_update_program([current_opcode, value_1, value_2], intcode_program, @jump_if_true_opcode, instruction_pointer) do
     value_1 = value_by_parameter_mode(current_opcode, intcode_program, value_1, 2)
     value_2 = value_by_parameter_mode(current_opcode, intcode_program, value_2, 3)
 
     if value_1 != 0 do
       {:cont, {intcode_program, value_2}}
     else
-      {:cont, {intcode_program, instruction_pointer_index + 3}}
+      {:cont, {intcode_program, instruction_pointer + 3}}
     end
   end
 
-  defp parse_opcode_and_update_program([current_opcode, value_1, value_2], intcode_program, @jump_if_false_opcode, instruction_pointer_index) do
+  defp parse_opcode_and_update_program([current_opcode, value_1, value_2], intcode_program, @jump_if_false_opcode, instruction_pointer) do
     value_1 = value_by_parameter_mode(current_opcode, intcode_program, value_1, 2)
     value_2 = value_by_parameter_mode(current_opcode, intcode_program, value_2, 3)
 
     if value_1 === 0 do
       {:cont, {intcode_program, value_2}}
     else
-      {:cont, {intcode_program, instruction_pointer_index + 3}}
+      {:cont, {intcode_program, instruction_pointer + 3}}
     end
   end
 
-  defp parse_opcode_and_update_program([current_opcode, value_1, value_2, override_index], intcode_program, @less_than_opcode, instruction_pointer_index) do
+  defp parse_opcode_and_update_program([current_opcode, value_1, value_2, override_index], intcode_program, @less_than_opcode, instruction_pointer) do
     value_1 = value_by_parameter_mode(current_opcode, intcode_program, value_1, 2)
     value_2 = value_by_parameter_mode(current_opcode, intcode_program, value_2, 3)
 
@@ -102,10 +102,10 @@ defmodule AdventOfCode.Day5.Part2 do
         List.replace_at(intcode_program, override_index, 0)
       end
 
-    {:cont, {intcode_program, instruction_pointer_index + 4}}
+    {:cont, {intcode_program, instruction_pointer + 4}}
   end
 
-  defp parse_opcode_and_update_program([current_opcode, value_1, value_2, override_index], intcode_program, @equals_opcode, instruction_pointer_index) do
+  defp parse_opcode_and_update_program([current_opcode, value_1, value_2, override_index], intcode_program, @equals_opcode, instruction_pointer) do
     value_1 = value_by_parameter_mode(current_opcode, intcode_program, value_1, 2)
     value_2 = value_by_parameter_mode(current_opcode, intcode_program, value_2, 3)
 
@@ -116,10 +116,10 @@ defmodule AdventOfCode.Day5.Part2 do
         List.replace_at(intcode_program, override_index, 0)
       end
 
-    {:cont, {intcode_program, instruction_pointer_index + 4}}
+    {:cont, {intcode_program, instruction_pointer + 4}}
   end
 
-  defp parse_opcode_and_update_program(_, intcode_program, @halt_opcode, _instruction_pointer_index) do
+  defp parse_opcode_and_update_program(_, intcode_program, @halt_opcode, _instruction_pointer) do
     {:halt, intcode_program}
   end
 
