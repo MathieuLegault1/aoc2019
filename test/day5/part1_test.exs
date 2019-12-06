@@ -3,7 +3,6 @@ defmodule AdventOfCode.Day5.Part1Test do
 
   alias AdventOfCode.Day5.Part1
 
-  @tag :day5
   test "run/1 returns the correct output given the examples" do
   end
 end
